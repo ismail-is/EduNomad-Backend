@@ -1,10 +1,10 @@
 const mongoose =require('mongoose');
 require('dotenv').config();
-// const mongoDBURL='mongodb://127.0.0.1:27017/Edunomad';
+const mongoDBURL='mongodb://127.0.0.1:27017/Edunomad';
 
 const ConnectDataBase=async()=>{
     try{
-        await  mongoose.connect(process.env.MONGODB_URI);
+        await  mongoose.connect(mongoDBURL);
         console.log("Data Base Connect ");
         
     }
