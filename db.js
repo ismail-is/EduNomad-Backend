@@ -1,10 +1,10 @@
 const mongoose =require('mongoose');
 require('dotenv').config();
-const mongoDBURL=process.env.database;
+// const mongoDBURL=process.env.database;
 
 const ConnectDataBase=async()=>{
     try{
-        await  mongoose.connect(mongoDBURL);
+        await  mongoose.connect(process.env.database);
         console.log("Data Base Connect ");
         
     }
