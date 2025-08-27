@@ -1,6 +1,6 @@
 const mongoose =require('mongoose');
 require('dotenv').config();
-const mongoDBURL='mongodb://127.0.0.1:27017/Edunomad';
+const mongoDBURL=process.env.database;
 
 const ConnectDataBase=async()=>{
     try{
