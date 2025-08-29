@@ -3,7 +3,9 @@ const TeacherSchema = require('../model/TeacherSchema');
 const TearcherInsert = async (req, res) => {
   try {
     const { name, email, message } = req.body;
-    const uploadFile = req.file ? req.file.path : null; // multer gives req.file
+    
+    // If file uploaded → save relative path, else null
+    const uploadFile = req.file ? `/uploads/${req.file.filename}` : null;
 
     const data = new TeacherSchema({ name, email, message, uploadFile });
     const saveData = await data.save();
@@ -14,6 +16,7 @@ const TearcherInsert = async (req, res) => {
     res.status(500).json({ success: false, message: 'teacher not inserted' });
   }
 };
+
 
 const TeacherView = async (req, res) => {
   try {
