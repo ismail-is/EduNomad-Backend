@@ -1,6 +1,7 @@
 const  express =require('express');
 const {JobInsert,JobViwe, JobViewSingle, DeleteJob, UpdateJob} = require('../controller/jobPosting');
-const TearcherInsert=require('../controller/TeacherApply');
+const {TearcherInsert,TeacherView}=require('../controller/TeacherApply');
+const upload = require('../middleware/multerConfig');
 
 const router=express.Router();
 
@@ -15,5 +16,6 @@ router.put('/jobupdate/:id',UpdateJob)
 
 
 // Teacher 
-router.post('/teacherInsert',TearcherInsert)
+router.post('/teacherInsert',upload.single('uploadFile'),TearcherInsert)
+router.get('/teacherview',TeacherView);
 module.exports=router;

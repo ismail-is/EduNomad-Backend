@@ -9,7 +9,7 @@ app.use(express.json())
 const data=require('./db');
 // imports files
       
-
+app.use('/uploads', express.static('uploads')); 
 app.use('/api',require('./router/mainRouter'))
 
 
