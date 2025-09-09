@@ -1,9 +1,10 @@
 const express= require('express');
+const cors = require("cors");
 const app = express();
+
 require('dotenv').config();
 app.use(express.json())
-
-
+app.use(cors());
 
 // imports files
 const data=require('./db');
@@ -11,7 +12,8 @@ const data=require('./db');
       
 app.use('/uploads', express.static('uploads')); 
 app.use('/api',require('./router/mainRouter'))
-
+app.use("/api/auth", require("./router/authRoutes"));
+app.use("/api", require("./router/protectedRoutes"));
 
 
 
