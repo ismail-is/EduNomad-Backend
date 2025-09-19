@@ -1,30 +1,32 @@
 const  express =require('express');
-const {JobInsert,JobViwe, JobViewSingle, DeleteJob, UpdateJob} = require('../controller/jobPosting');
-const {TearcherInsert,TeacherView}=require('../controller/TeacherApply');
-const upload = require('../middleware/multerConfig');
+const {JobInsert,JobViwe, JobViewSingle, DeleteJob, UpdateJob, JobViweAuth} = require('../controller/jobPosting');
 
 
-const authMiddleware = require("../middleware/authMiddleware");
-const roleMiddleware = require("../middleware/roleMiddleware");
+const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware');
+
 const { registerSchool, loginSchool, getSchoolProfile } = require('../controller/schoolController');
 const { getProfile, register, login } = require('../controller/authController');
+const { handleApplication } = require('../controller/applicationController');
 
 
 const router=express.Router();
 
 
-router.post('/jobinsert',JobInsert);
+router.post('/jobinsert', authMiddleware, roleMiddleware(['school','parent']), JobInsert);
 router.get('/jobview',JobViwe);
-router.get('/jobview/:id',JobViewSingle)
-router.delete('/jobdelete/:id',DeleteJob)
-router.put('/jobupdate/:id',UpdateJob)
+router.get('/jobviewauth', authMiddleware, JobViweAuth);
+router.get('/jobview/:id',  JobViewSingle);
+router.delete('/jobdelete/:id', authMiddleware, roleMiddleware(['school','parent']), DeleteJob);
+router.put('/jobupdate/:id', authMiddleware, roleMiddleware(['school','parent']), UpdateJob);
 
+// apply
 
+router.post('/apply', handleApplication)
+// apply
 
 
 // Teacher 
-router.post('/teacherInsert',upload.single('uploadFile'),TearcherInsert)
-router.get('/teacherview',TeacherView);
+
 
 
 
