@@ -8,7 +8,7 @@ const { param } = require('../router/mainRouter');
 
 const JobInsert = async (req, res) => {
   try {
-    const { titel, department, location, employmentType, lastdate, message,requirements } = req.body;
+    const { titel, department, location, employmentType, lastdate, message,requirements,experience,qualification,gender } = req.body;
 
     const data = await new jobSchema({
       titel,
@@ -18,6 +18,9 @@ const JobInsert = async (req, res) => {
       lastdate,
       message,
       requirements,
+      experience,
+      qualification,
+      gender,
       userId: req.user.id // Add user ID from authenticated user
     });
 
@@ -50,13 +53,21 @@ const JobViweAuth = async (req, res) => {
   }
 };
 
+const JobViweSingleAuth = async (req, res) => {
+  try {
+    // Only show jobs for the authenticated user
+    const data = await jobSchema.findOne({ userId: req.user.id });
+    res.send({ 'job view success': true, data });
+  } catch (error) {
+    console.log("jobView get error", error);
+    res.status(500).json({ success: false, message: "Error fetching jobs" });
+  }
+};
+
 const JobViewSingle = async (req, res) => {
   try {
     // Only allow viewing if job belongs to user
-    const data = await jobSchema.findOne({
-      _id: req.params.id,
-      userId: req.user.id
-    });
+    const data = await jobSchema.findOne({  _id: req.params.id});
     
     if (!data) {
       return res.status(404).json({ message: "Job not found" });
@@ -119,4 +130,4 @@ const DeleteJob = async (req, res) => {
   }
 };
 
-module.exports = { JobInsert, JobViwe, JobViewSingle, UpdateJob, DeleteJob,JobViweAuth };
+module.exports = { JobInsert, JobViwe, JobViewSingle, UpdateJob, DeleteJob,JobViweAuth,JobViweSingleAuth };

@@ -14,9 +14,18 @@ const JobPosting= new Schema({
     },
     employmentType:{
    type:String
-},
+  },
 lastdate:{
     type:Date
+},
+experience:{
+      type:String
+},
+qualification:{
+      type:String
+},
+gender:{
+      type:String
 },
 message:{
     type:String

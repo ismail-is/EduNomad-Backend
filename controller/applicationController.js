@@ -45,7 +45,7 @@ const handleApplication = async (req, res) => {
         return res.status(400).json({ error: err.message });
       }
 
-      const { name, email, message } = req.body;
+      const { name, email, message,userId,jobId,username,jobTitel,role,lastdate,status} = req.body;
 
       // Validate required fields
       if (!name || !email || !req.file) {
@@ -56,6 +56,13 @@ const handleApplication = async (req, res) => {
         name,
         email,
         message: message || '',
+        userId,
+        jobId,
+        jobTitel,
+        role,
+        username,
+        lastdate,
+        status,
         resume: {
           filename: req.file.filename,
           path: req.file.path
@@ -70,4 +77,58 @@ const handleApplication = async (req, res) => {
   }
 };
 
-module.exports = { handleApplication };
+const applicationView = async (req, res) => {
+  try {
+    // Only show jobs for the authenticated user
+    const data = await Application.find();
+    res.send({ 'Application view success': true, data });
+  } catch (error) {
+    console.log("Application get error", error);
+    res.status(500).json({ success: false, message: "Error fetching jobs" });
+  }
+};
+const applicationSingleView = async (req, res) => {
+  try {
+    const data = await Application.findById(req.params.id);
+    res.send({ 'Application view success': true, data });
+  } catch (error) {
+    console.log("Application get error", error);
+    res.status(500).json({ success: false, message: "Error fetching jobs" });
+  }
+};
+
+
+
+const adminStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status} = req.body;
+
+    if (!["accepted", "rejected", "pending"].includes(status)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid status value" });
+    }
+
+    const updatedRecord = await Application.findByIdAndUpdate(
+      id,
+      { status},
+      { new: true } // return updated doc
+    );
+
+    if (!updatedRecord) {
+      return res.status(404).json({ success: false, message: "Record not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Admin status updated successfully",
+      data: updatedRecord,
+    });
+  } catch (error) {
+    console.error("Error updating admin status:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+module.exports = { handleApplication,applicationView,applicationSingleView ,adminStatus};
