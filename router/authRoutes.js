@@ -1,3 +1,4 @@
+// routes/authRoutes.js
 const express = require("express");
 const router = express.Router();
 const {
@@ -6,18 +7,28 @@ const {
   loginSchoolParent,
   loginTeacherTutor,
   getProfile,
+  googleAuth,
+  googleCallback,
+  completeGoogleRegistration,
 } = require("../controller/authController");
 const { authMiddleware } = require("../middleware/authMiddleware");
 
-// Registration (same for all roles – choose role in dropdown on frontend)
+// Registration (same for all roles)
 router.post("/register", register);
 
-// Generic login (if you want one endpoint)
+// Generic login
 router.post("/login", loginGeneric);
 
-// Grouped logins for your two pages:
-router.post("/login/school-parent", loginSchoolParent);
-router.post("/login/teacher-tutor", loginTeacherTutor);
+// Grouped logins
+// router.post("/login/school-parent", loginSchoolParent);
+// router.post("/login/teacher-tutor", loginTeacherTutor);
+
+// Google OAuth routes
+router.get("/google", googleAuth);
+router.get("/google/callback", googleCallback);
+
+// Complete Google registration (set role)
+router.post("/google/complete", authMiddleware, completeGoogleRegistration);
 
 // Who am I (protected)
 router.get("/profile", authMiddleware, getProfile);
